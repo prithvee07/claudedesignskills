@@ -16,6 +16,9 @@ Presets:
     vanilla  - @theatre/core + studio, animates a DOM element
     r3f      - @theatre/r3f with SheetProvider + editable mesh/camera
     scroll   - scroll position mapped onto the sequence
+    hero     - staggered hero headline + subtitle intro reveal
+    loader   - looping loader / progress ring
+    stagger  - staggered list/grid item reveal
 
 Dependencies: Python 3 standard library only.
 """
@@ -141,7 +144,132 @@ updateFromScroll()
 '''
 
 
-PRESETS = {'vanilla': vanilla, 'r3f': r3f, 'scroll': scroll}
+def hero(project: str, sheet: str) -> str:
+    return f'''import {{ getProject, types }} from '@theatre/core'
+import studio from '@theatre/studio'
+
+// DESIGN: Hero intro — headline and subtitle rise and fade in, staggered.
+// Markup expected: <h1 class="headline">…</h1><p class="subtitle">…</p>
+if (import.meta.env?.DEV ?? process.env.NODE_ENV !== 'production') {{
+  studio.initialize()
+}}
+
+const sheet = getProject('{project}').sheet('{sheet}')
+
+const headline = document.querySelector('.headline')
+const subtitle = document.querySelector('.subtitle')
+
+const headlineObj = sheet.object('Headline', {{
+  y: types.number(60, {{ range: [-200, 200] }}),
+  opacity: types.number(0, {{ range: [0, 1] }}),
+  blur: types.number(12, {{ range: [0, 40] }}),
+}})
+
+const subtitleObj = sheet.object('Subtitle', {{
+  y: types.number(40, {{ range: [-200, 200] }}),
+  opacity: types.number(0, {{ range: [0, 1] }}),
+}})
+
+headlineObj.onValuesChange(({{ y, opacity, blur }}) => {{
+  headline.style.transform = `translateY(${{y}}px)`
+  headline.style.opacity = opacity
+  headline.style.filter = `blur(${{blur}}px)`
+}})
+
+subtitleObj.onValuesChange(({{ y, opacity }}) => {{
+  subtitle.style.transform = `translateY(${{y}}px)`
+  subtitle.style.opacity = opacity
+}})
+
+// Author the stagger in Studio (e.g. subtitle starts ~0.3s after headline),
+// then play the intro once.
+sheet.sequence.play({{ range: [0, 1.6] }})
+'''
+
+
+def loader(project: str, sheet: str) -> str:
+    return f'''import {{ getProject, types }} from '@theatre/core'
+import studio from '@theatre/studio'
+
+// DESIGN: Looping loader — a progress ring sweeps and a label pulses.
+// Markup expected: <div class="loader"><svg>…<circle class="ring"/></svg>
+//   <span class="loader-label">Loading</span></div>
+if (import.meta.env?.DEV ?? process.env.NODE_ENV !== 'production') {{
+  studio.initialize()
+}}
+
+const sheet = getProject('{project}').sheet('{sheet}')
+
+const ring = document.querySelector('.ring')
+const label = document.querySelector('.loader-label')
+
+// Set the SVG circle up for dash animation (circumference ~= 2 * PI * r)
+const CIRCUMFERENCE = 283 // r = 45
+if (ring) {{
+  ring.style.strokeDasharray = String(CIRCUMFERENCE)
+}}
+
+const loaderObj = sheet.object('Loader', {{
+  progress: types.number(0, {{ range: [0, 1] }}),   // 0 -> 1 sweep
+  spin: types.number(0, {{ range: [0, 360] }}),      // rotation
+  labelOpacity: types.number(1, {{ range: [0, 1] }}),
+}})
+
+loaderObj.onValuesChange(({{ progress, spin, labelOpacity }}) => {{
+  if (ring) {{
+    ring.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - progress))
+    ring.style.transform = `rotate(${{spin}}deg)`
+    ring.style.transformOrigin = '50% 50%'
+  }}
+  if (label) label.style.opacity = labelOpacity
+}})
+
+// Loop forever while loading; stop with sheet.sequence.pause() when ready.
+sheet.sequence.play({{ iterationCount: Infinity, range: [0, 1.2] }})
+'''
+
+
+def stagger(project: str, sheet: str) -> str:
+    return f'''import {{ getProject, types }} from '@theatre/core'
+import studio from '@theatre/studio'
+
+// DESIGN: Staggered reveal — a list/grid of items animates in one after another.
+// Markup expected: <ul class="grid"><li>…</li> … </ul>
+if (import.meta.env?.DEV ?? process.env.NODE_ENV !== 'production') {{
+  studio.initialize()
+}}
+
+const sheet = getProject('{project}').sheet('{sheet}')
+
+const items = Array.from(document.querySelectorAll('.grid > *'))
+
+// One sheet object per item lets each be keyframed independently in Studio.
+// Offset each item's start to create the stagger.
+items.forEach((el, i) => {{
+  const obj = sheet.object(`Item ${{i + 1}}`, {{
+    y: types.number(30, {{ range: [-120, 120] }}),
+    opacity: types.number(0, {{ range: [0, 1] }}),
+    scale: types.number(0.9, {{ range: [0, 1.4] }}),
+  }})
+  obj.onValuesChange(({{ y, opacity, scale }}) => {{
+    el.style.transform = `translateY(${{y}}px) scale(${{scale}})`
+    el.style.opacity = opacity
+  }})
+}})
+
+// Author per-item offsets in Studio for the staggered cascade, then play.
+sheet.sequence.play({{ range: [0, 2] }})
+'''
+
+
+PRESETS = {
+    'vanilla': vanilla,
+    'r3f': r3f,
+    'scroll': scroll,
+    'hero': hero,
+    'loader': loader,
+    'stagger': stagger,
+}
 
 
 def main() -> int:

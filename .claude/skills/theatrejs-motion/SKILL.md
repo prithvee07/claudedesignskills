@@ -399,7 +399,7 @@ behind a dev check so bundlers tree-shake it out of production.
 ## Resources
 
 **Scripts** (`scripts/`):
-- `init_project.py` — Generate Theatre.js project boilerplate (vanilla, R3F, or scroll-driven presets)
+- `init_project.py` — Scaffold a motion design from a preset: `vanilla`, `r3f`, `scroll`, `hero` (intro reveal), `loader` (looping ring), `stagger` (cascading list/grid)
 - `generate_sheet_object.py` — Generate a typed sheet object + `onValuesChange` handler from a prop spec
 - `check_production_ready.py` — Scan source for common footguns (unguarded Studio, missing `project.ready`, Studio in dependencies)
 
@@ -409,6 +409,7 @@ behind a dev check so bundlers tree-shake it out of production.
 
 **Assets** (`assets/`):
 - `starter_theatre/` — Minimal Vite starter wired for Theatre.js core + Studio
+- `examples/` — Design gallery (hero intro, loader, stagger, scroll, R3F) with a fully worked `hero/` example (HTML + CSS + JS)
 
 **Official**:
 - Docs: https://www.theatrejs.com/docs/latest
