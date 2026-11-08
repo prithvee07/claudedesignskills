@@ -120,6 +120,22 @@
       "license": "Apache-2.0"
     },
     {
+      "name": "lenis-smooth-scroll",
+      "source": "./individual/lenis-smooth-scroll",
+      "version": "1.0.0",
+      "description": "Add smooth, inertia-based scrolling to the web with Lenis - a lightweight, performant smooth-scroll library. Use when building design-agency style sites with buttery smooth scroll, scroll-driven parallax, reveal-on-scroll sections, or anchor scrolling, and when synchronizing smooth scroll with GSAP ScrollTrigger, Theatre.js sequences, or React. Triggers on tasks involving Lenis, smooth scroll, inertia/momentum scrolling, scroll normalization, scrollTo anchors, parallax, scroll progress, or integrating smooth scroll with animation timelines. Modern alternative to Locomotive Scroll with a smaller footprint and native-scroll compatibility.",
+      "category": "scroll",
+      "tags": [
+        "lenis",
+        "smooth-scroll",
+        "parallax",
+        "scroll",
+        "inertia"
+      ],
+      "author": "Claude Design Skillstack",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "lightweight-3d-effects",
       "source": "./individual/lightweight-3d-effects",
       "version": "1.0.0",

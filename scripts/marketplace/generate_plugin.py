@@ -60,6 +60,7 @@ SKILL_CATEGORIES = {
 
     # Additional
     "theatrejs-motion": {"category": "animation", "tags": ["theatrejs", "animation", "sequencing", "keyframes", "motion-design"]},
+    "lenis-smooth-scroll": {"category": "scroll", "tags": ["lenis", "smooth-scroll", "parallax", "scroll", "inertia"]},
 }
 
 # Command templates for different skill types
@@ -568,6 +569,7 @@ This agent has access to:
             "rive-interactive": "Rive",
             "substance-3d-texturing": "Substance 3D",
             "theatrejs-motion": "Theatre.js",
+            "lenis-smooth-scroll": "Lenis Smooth Scroll",
         }
 
         return special_cases.get(self.skill_name, self.skill_name.replace('-', ' ').title())
