@@ -32,11 +32,16 @@ them with the skill's `init_project.py`:
    object's keyframes to create the cascade.
 4. Export the project state to `state.json` and ship with `@theatre/core` only.
 
-## Fully worked example
+## Fully worked examples
 
-`hero/` contains a complete, runnable version of the `hero` design (markup, CSS,
-and the Theatre.js code) so the expected DOM structure and styling are clear.
-Use it as a reference when wiring any of the other presets.
+Three designs ship as complete, runnable folders (markup + CSS + Theatre.js
+code) so the expected DOM structure and styling are clear:
+
+- `hero/` — headline + subtitle intro reveal
+- `loader/` — looping progress ring with pulsing label (includes the SVG markup)
+- `stagger/` — cascading grid of items
+
+Use any of them as a reference when wiring the other presets.
 
 See the skill's `references/troubleshooting.md` for the Theatre.js-vs-GSAP
 decision guide and common fixes.

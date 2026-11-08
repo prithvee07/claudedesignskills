@@ -1,0 +1,44 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: #0b0b12;
+  color: #f5f5f7;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.stage {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  padding: 2rem;
+}
+
+.grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: min(90vw, 560px);
+}
+
+.grid > * {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 2;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1b1b2e 0%, #2a2140 100%);
+  border: 1px solid #333150;
+  font-weight: 600;
+  /* transform + opacity animated per item by Theatre.js */
+  will-change: transform, opacity;
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
