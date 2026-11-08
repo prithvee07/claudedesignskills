@@ -234,6 +234,134 @@ window.addEventListener('pointermove', (e) => {
 })
 ```
 
+### Pattern 6: Scroll-driven R3F camera (scroll scrubs the 3D sequence)
+
+The most common real-world setup: author a camera/mesh sequence in Studio, then
+let scroll position scrub it instead of `play()`. Combine `@theatre/r3f` with the
+scroll-to-position mapping.
+
+```jsx
+import { Canvas, useThree } from '@react-three/fiber'
+import { useEffect } from 'react'
+import { getProject } from '@theatre/core'
+import { SheetProvider, editable as e, PerspectiveCamera } from '@theatre/r3f'
+import studio from '@theatre/studio'
+import extension from '@theatre/r3f/dist/extension'
+import projectState from './state.json' // exported from Studio
+
+if (import.meta.env?.DEV) {
+  studio.initialize()
+  studio.extend(extension)
+}
+
+// In production, load authored state; in dev, omit state to author fresh
+const project = getProject('Scroll Scene', import.meta.env?.DEV ? undefined : { state: projectState })
+const sheet = project.sheet('Scene')
+const SEQ_LENGTH = 6 // authored length in seconds
+
+function ScrollRig() {
+  useEffect(() => {
+    let raf = 0
+    const onScroll = () => {
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => {
+        const max = document.documentElement.scrollHeight - window.innerHeight
+        const progress = max > 0 ? window.scrollY / max : 0
+        sheet.sequence.position = progress * SEQ_LENGTH
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+  return null
+}
+
+export default function App() {
+  return (
+    <Canvas frameloop="demand">
+      <SheetProvider sheet={sheet}>
+        <PerspectiveCamera theatreKey="Camera" makeDefault position={[0, 0, 8]} />
+        <ambientLight intensity={0.6} />
+        <e.mesh theatreKey="Hero">
+          <torusKnotGeometry args={[1, 0.3, 128, 32]} />
+          <meshStandardMaterial color="hotpink" />
+        </e.mesh>
+        <ScrollRig />
+      </SheetProvider>
+    </Canvas>
+  )
+}
+```
+
+Note: with `frameloop="demand"`, request a render whenever the sequence position
+changes (R3F's `invalidate()`), or keep the default loop while scrubbing.
+
+### Pattern 7: Audio-synced sequence
+
+Lock a sequence to an audio source so visuals stay in time with sound.
+
+```js
+const sheet = getProject('Music Video').sheet('Scene')
+
+// attachAudio resolves once the audio is decoded and ready
+await sheet.sequence.attachAudio({ source: '/track.mp3' })
+
+// Now play() is synced to the audio clock
+sheet.sequence.play({ range: [0, 30] })
+```
+
+---
+
+## TypeScript
+
+Prop types are inferred, and sheet objects expose typed `value` and
+`onValuesChange` payloads. Import `ISheetObject` for explicit typing.
+
+```ts
+import { getProject, types, type ISheetObject } from '@theatre/core'
+
+const props = {
+  x: types.number(0, { range: [-100, 100] }),
+  opacity: types.number(1, { range: [0, 1] }),
+  label: types.string('Hello'),
+}
+
+const sheet = getProject('App').sheet('Main')
+const obj: ISheetObject<typeof props> = sheet.object('Box', props)
+
+// values is fully typed: { x: number; opacity: number; label: string }
+obj.onValuesChange((values) => {
+  const { x, opacity } = values
+  // ...
+})
+```
+
+For `@theatre/r3f`, `editable` elements accept the underlying Three.js element
+props plus `theatreKey: string`, so JSX stays type-checked.
+
+## Production Workflow
+
+The dev editor and the shipped runtime are two phases:
+
+1. **Author (dev)**: `studio.initialize()` mounts the editor. Keyframe on the
+   timeline, scrub, and tune easing.
+2. **Export**: From the Studio UI export the project, or
+   `studio.createContentOfSaveFile('Project Name')` → save as `state.json`.
+3. **Ship (prod)**: Load the state and never initialize Studio.
+
+```js
+import { getProject } from '@theatre/core'
+import state from './state.json'
+
+const project = getProject('Project Name', { state })
+await project.ready           // apply initial values before first frame
+project.sheet('Scene').sequence.play()
+```
+
+Keep `@theatre/studio` in `devDependencies` and guard every `studio.*` call
+behind a dev check so bundlers tree-shake it out of production.
+
 ---
 
 ## Integration Patterns
@@ -273,9 +401,11 @@ window.addEventListener('pointermove', (e) => {
 **Scripts** (`scripts/`):
 - `init_project.py` — Generate Theatre.js project boilerplate (vanilla, R3F, or scroll-driven presets)
 - `generate_sheet_object.py` — Generate a typed sheet object + `onValuesChange` handler from a prop spec
+- `check_production_ready.py` — Scan source for common footguns (unguarded Studio, missing `project.ready`, Studio in dependencies)
 
 **References** (`references/`):
 - `api_reference.md` — Full API: core, types, sequence, studio, and `@theatre/r3f`
+- `troubleshooting.md` — Common errors, fixes, and a Theatre.js-vs-GSAP decision guide
 
 **Assets** (`assets/`):
 - `starter_theatre/` — Minimal Vite starter wired for Theatre.js core + Studio
