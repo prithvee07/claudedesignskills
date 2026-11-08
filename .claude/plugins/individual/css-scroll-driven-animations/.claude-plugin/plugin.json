@@ -1,0 +1,23 @@
+{
+  "name": "css-scroll-driven-animations",
+  "version": "1.0.0",
+  "description": "Build scroll-driven animations with native CSS - no JavaScript library. Use when creating scroll progress bars, reveal-on-scroll, parallax, sticky image reveals, or horizontal scroll sections using the CSS scroll-timeline and view-timeline features. Triggers on tasks involving animation-timeline, scroll(), view(), scroll-timeline, view-timeline, animation-range, timeline-scope, or CSS-only scroll animation. Lighter, main-thread-free alternative to GSAP ScrollTrigger or AOS for effects that map element animation to scroll position, with progressive enhancement via @supports.",
+  "author": "Claude Design Skillstack",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/freshtechbro/claudedesignskills",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/freshtechbro/claudedesignskills.git"
+  },
+  "keywords": [
+    "css",
+    "scroll",
+    "animation-timeline",
+    "view-timeline",
+    "parallax"
+  ],
+  "category": "scroll",
+  "skills": "skills/",
+  "commands": "commands/",
+  "agents": "agents/"
+}

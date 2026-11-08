@@ -1,0 +1,30 @@
+* { box-sizing: border-box; margin: 0; }
+
+html, body { height: 100%; overflow: hidden; background: #0b0b12; }
+
+#world { position: fixed; inset: 0; }
+#world canvas { display: block; }
+
+.hud {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  color: #f5f5f7;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.9rem;
+}
+
+.hud button {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #333150;
+  border-radius: 8px;
+  background: #1b1b2e;
+  color: #f5f5f7;
+  cursor: pointer;
+}
+
+.hud button:hover { background: #262645; }

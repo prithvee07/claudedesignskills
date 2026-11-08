@@ -62,6 +62,8 @@ SKILL_CATEGORIES = {
     "theatrejs-motion": {"category": "animation", "tags": ["theatrejs", "animation", "sequencing", "keyframes", "motion-design"]},
     "lenis-smooth-scroll": {"category": "scroll", "tags": ["lenis", "smooth-scroll", "parallax", "scroll", "inertia"]},
     "shader-glsl-webgl": {"category": "3d-graphics", "tags": ["glsl", "shaders", "webgl", "fragment-shader", "raymarching"]},
+    "css-scroll-driven-animations": {"category": "scroll", "tags": ["css", "scroll", "animation-timeline", "view-timeline", "parallax"]},
+    "matter-js-physics": {"category": "animation", "tags": ["matter-js", "physics", "2d", "collisions", "interactive"]},
 }
 
 # Command templates for different skill types
@@ -572,6 +574,8 @@ This agent has access to:
             "theatrejs-motion": "Theatre.js",
             "lenis-smooth-scroll": "Lenis Smooth Scroll",
             "shader-glsl-webgl": "GLSL Shaders",
+            "css-scroll-driven-animations": "CSS Scroll-Driven Animations",
+            "matter-js-physics": "Matter.js Physics",
         }
 
         return special_cases.get(self.skill_name, self.skill_name.replace('-', ' ').title())

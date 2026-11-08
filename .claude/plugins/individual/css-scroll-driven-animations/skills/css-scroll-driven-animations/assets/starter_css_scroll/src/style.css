@@ -1,0 +1,93 @@
+* { box-sizing: border-box; margin: 0; }
+
+body {
+  background: #0b0b12;
+  color: #f5f5f7;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+section,
+footer {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.panel.tall { min-height: 200vh; }
+
+/* 1. Scroll progress bar (scroll timeline) */
+@keyframes grow { to { transform: scaleX(1); } }
+.progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: #7b5cff;
+  transform: scaleX(0);
+  transform-origin: left;
+  z-index: 10;
+}
+@supports (animation-timeline: scroll()) {
+  .progress {
+    animation: grow auto linear;
+    animation-timeline: scroll(root);
+  }
+}
+
+/* 2. Reveal on enter (view timeline) */
+@keyframes reveal { from { opacity: 0; translate: 0 2rem; } to { opacity: 1; translate: 0 0; } }
+.reveal { opacity: 1; } /* fallback: visible */
+@supports (animation-timeline: view()) {
+  .reveal {
+    opacity: 0;
+    animation: reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 30%;
+  }
+}
+
+/* 3. Parallax (view timeline) */
+.parallax-wrap { overflow: hidden; }
+@keyframes parallax { to { translate: 0 -18%; } }
+@supports (animation-timeline: view()) {
+  .parallax {
+    animation: parallax linear;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+}
+
+/* 4. Sticky clip reveal (view timeline) */
+@keyframes unclip { from { clip-path: inset(45%); } to { clip-path: inset(0%); } }
+.sticky-img {
+  position: sticky;
+  top: 30vh;
+  display: grid;
+  place-items: center;
+  height: 40vh;
+  width: min(80vw, 640px);
+  margin: 0 auto;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ff4dd8, #7b5cff);
+  font-weight: 700;
+}
+@supports (animation-timeline: view()) {
+  .sticky-img {
+    animation: unclip linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 50%;
+  }
+}
+
+/* Accessibility: disable motion when requested */
+@media (prefers-reduced-motion: reduce) {
+  .progress, .reveal, .parallax, .sticky-img {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    translate: none !important;
+    clip-path: none !important;
+  }
+}

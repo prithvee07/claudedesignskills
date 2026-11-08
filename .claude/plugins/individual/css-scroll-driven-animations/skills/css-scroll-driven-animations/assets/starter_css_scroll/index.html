@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Scroll-Driven Animations</title>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <div class="progress"></div>
+
+    <section class="hero">
+      <h1>Scroll down</h1>
+      <p>Everything here is CSS-only scroll animation.</p>
+    </section>
+
+    <section class="panel">
+      <h2 class="reveal">Reveal on enter</h2>
+      <p class="reveal">This block fades and rises as it enters the viewport.</p>
+    </section>
+
+    <section class="panel">
+      <div class="parallax-wrap">
+        <div class="parallax">Parallax layer</div>
+      </div>
+    </section>
+
+    <section class="panel tall">
+      <figure class="sticky-img">Sticky clip reveal</figure>
+    </section>
+
+    <footer class="panel">End</footer>
+
+    <!-- No JavaScript: all motion is native CSS scroll/view timelines. -->
+  </body>
+</html>
