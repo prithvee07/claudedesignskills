@@ -304,6 +304,22 @@
       "license": "Apache-2.0"
     },
     {
+      "name": "shader-glsl-webgl",
+      "source": "./individual/shader-glsl-webgl",
+      "version": "1.0.0",
+      "description": "Write custom GLSL shaders for the web - fragment and vertex shaders for WebGL and Three.js. Use when building shader-driven backgrounds, gradients, noise and procedural patterns, raymarched scenes, displacement effects, image/post-processing passes, or custom materials. Triggers on tasks involving GLSL, fragment shaders, vertex shaders, uniforms, varyings, WebGL/WebGL2, ShaderMaterial, RawShaderMaterial, signed distance fields (SDF), raymarching, noise/fbm, or Shadertoy-style effects. Covers raw WebGL setup and Three.js integration, GLSL ES 1.00 and 3.00 differences, and performance.",
+      "category": "3d-graphics",
+      "tags": [
+        "glsl",
+        "shaders",
+        "webgl",
+        "fragment-shader",
+        "raymarching"
+      ],
+      "author": "Claude Design Skillstack",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "spline-interactive",
       "source": "./individual/spline-interactive",
       "version": "1.0.0",
